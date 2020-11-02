@@ -2,6 +2,7 @@ import utm
 from math import sqrt
 from panorama import Panorama
 
+
 def circle(latlng_origin=None, pid_origin=None, radius=15):
     """
     Returns a validator function for a Panorama. which Returns True if
@@ -48,13 +49,13 @@ def box(latlng_origin=None, pid_origin=None, width=15, height=15):
     else:
         raise ValueError("One of the arguments 'latlang_origin' or 'pid_origin' must be given.")
 
-
     def isClose(p):
         ll = p.getGPS()
         (est, nth, zn, zl) = utm.from_latlon(ll[0], ll[1], force_zone_number=z_number)
         x, y = est-easting, nth-northing
-        return abs(x) < w/2 and abs(y) < h/2
+        return abs(x) < width/2 and abs(y) < height/2
     return isClose
+
 
 def gpsbox(topleft, btmright):
     """
@@ -65,8 +66,8 @@ def gpsbox(topleft, btmright):
              if the Panorama is inside the gps box.
     """
     def isClose(p):
-        lt,ln = p.getGPS()
-        return lt<=topleft[0] and lt>btmright[0] and ln>=topleft[1] and ln<btmright[1]
+        lt, ln = p.getGPS()
+        return topleft[0] >= lt >btmright[0] and topleft[1] <= ln < btmright[1]
     return isClose
 
 

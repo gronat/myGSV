@@ -64,24 +64,27 @@ from panorama import Panorama
 
 
 class Arguments:
-    cmds = None
-    label = None
-    root = None
-    time = None
-    images = None
-    depth = None
-    zoom = None
-    latlng = None
-    panoid = None
-    topleft = None
-    btmright = None
-    circle = None
-    box = None
-    gpsbox = None
-    resume = None
-    info = None
-    show = None
-    pvalid = None
+
+    def __init__(self):
+        self.cmds = None
+        self.label = None
+        self.root = None
+        self.time = None
+        self.images = None
+        self.depth = None
+        self.zoom = None
+        self.latlng = None
+        self.panoid = None
+        self.topleft = None
+        self.btmright = None
+        self.circle = None
+        self.box = None
+        self.gpsbox = None
+        self.resume = None
+        self.info = None
+        self.show = None
+        self.pvalid = None
+
 
 def tofloat(s):
     """
@@ -95,6 +98,7 @@ def tofloat(s):
     if s[0] is not 'n':
         return float(s)
     return -float(s[1:])
+
 
 def parse(args):
     # Info command
@@ -140,9 +144,9 @@ def parse(args):
             pvalid = validator.circle(pid_origin=args.panoid, radius=args.r)
     elif args.box:
         if args.latlng:
-            pvalid = validator.circle(latlng_origin=args.latlng, width=args.w, height=args.h)
+            pvalid = validator.box(latlng_origin=args.latlng, width=args.w, height=args.h)
         else:
-            pvalid = validator.circle(pid_origin=args.pid, width=args.w, height=args.h)
+            pvalid = validator.box(pid_origin=args.pid, width=args.w, height=args.h)
 
         # pvalid = validator.box(a.latlng, a.w, a.h)
     elif args.gpsbox:
@@ -154,12 +158,14 @@ def parse(args):
         pickle.dump(args, f)
     launch(args, pvalid)
 
+
 def launch(args, pvalid):
     c = Crawler(pano_id=args.panoid, latlng=args.latlng, validator=pvalid,
                 label=args.label, root=args.root, zoom=args.zoom,
                 images=args.images, depth=args.depth, time=args.time
                 )
     c.run()
+
 
 def main():
     s = sys.argv
@@ -203,6 +209,7 @@ def main():
     a.btmright = tofloat(args['LAT_BR']), tofloat(args['LNG_BR'])
 
     parse(a)
+
 
 if __name__ == '__main__':
     main()
